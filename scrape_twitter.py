@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 
 # MongoDB Atlas connection string
-MONGO_URI = "mongodb+srv://newuser:user123@cluster0.hswxa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = "mongodb+srv://<username>:<yourpassword>@cluster0.hswxa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = pymongo.MongoClient(MONGO_URI)
 db = client['twitter_scraper']
 collection = db['trending_topics']
