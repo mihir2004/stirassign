@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trending Topics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+  </head>
+  <body
+    class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen"
+  >
+    <!-- Toggle for Dark Mode -->
+    <div class="absolute top-5 right-5">
+      <button
+        id="darkModeToggle"
+        class="p-2 bg-gray-700 rounded-full focus:outline-none hover:bg-gray-600"
+      >
+        🌙
+      </button>
+    </div>
+
+    <!-- Header Section -->
+    <header class="text-center">
+      <h1 class="text-4xl font-bold mb-4">Twitter Trending Topics</h1>
+      <p class="text-gray-400">
+        Get the latest trends from Twitter using Selenium and MongoDB
+      </p>
+    </header>
+
+    <!-- Button to Fetch Data -->
+    <button
+      id="fetchButton"
+      class="mt-10 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 active:scale-95 transition-transform"
+    >
+      Fetch Trending Topics
+    </button>
+    <div
+      id="spinner"
+      class="hidden animate-spin border-t-4 border-blue-500 border-solid rounded-full w-6 h-6"
+    ></div>
+
+    <!-- Results Section -->
+    <div id="results" class="mt-10 w-4/5 md:w-2/3 lg:w-1/2 space-y-6 hidden">
+      <div
+        class="bg-gray-800 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+      >
+        <h2 id="resultHeader" class="text-2xl font-semibold mb-2"></h2>
+        <ul
+          id="trendList"
+          class="list-disc list-inside space-y-1 text-gray-300"
+        ></ul>
+        <p id="resultIP" class="mt-4 text-gray-400"></p>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="mt-10 text-center text-gray-500">
+      <p>
+        &copy; 2025 Stir Technologies. Built with Selenium, MongoDB, and
+        Tailwind CSS.
+      </p>
+    </footer>
+
+    <script>
+      // Toggle Dark Mode
+      const darkModeToggle = document.getElementById("darkModeToggle");
+      const body = document.body;
+
+      darkModeToggle.addEventListener("click", () => {
+        body.classList.toggle("dark");
+      });
+
+      // Fetch Trending Topics
+      const fetchButton = document.getElementById("fetchButton");
+      const results = document.getElementById("results");
+      const resultHeader = document.getElementById("resultHeader");
+      const trendList = document.getElementById("trendList");
+      const resultIP = document.getElementById("resultIP");
+
+      fetchButton.addEventListener("click", async () => {
+        fetchButton.textContent = "Fetching...";
+        fetchButton.disabled = true;
+
+        try {
+          const response = await fetch("/run-script");
+          const data = await response.json();
+
+          resultHeader.textContent = `Trending Topics as of ${data.date_time}`;
+          trendList.innerHTML = data.trends
+            .map((trend) => `<li>${trend}</li>`)
+            .join("");
+          resultIP.textContent = `IP Address Used: ${data.ip_address}`;
+
+          results.classList.remove("hidden");
+        } catch (error) {
+          alert("Failed to fetch data. Try again later.");
+        } finally {
+          fetchButton.textContent = "Fetch Trending Topics";
+          fetchButton.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
